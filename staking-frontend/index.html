@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brabo Staking - Earn Rewards</title>
+    <link rel="icon" type="image/png" href="info/tkimg.png">
+    <link rel="stylesheet" href="info/background.css">
+    <link rel="stylesheet" href="staking.css">
+    
+    
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-image-wrapper"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="info/tkimg.png" alt="PICA Logo" class="logo">
+                <div class="brand-info">
+                    <span class="brand-name">BRABO STAKING</span>
+                    <span class="brand-tagline">Stake & Earn Protocol</span>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <div class="network-indicator">
+                    <span class="network-status-dot"></span>
+                    <span class="network-name">Base Network</span>
+                </div>
+                <div class="wallet-container">
+                    <button class="connect-wallet-btn" id="connectWalletBtn">
+                        <span class="wallet-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="6" width="18" height="13" rx="2" ry="2"/>
+                                <path d="M3 10h18"/>
+                                <path d="M7 15h.01"/>
+                                <path d="M11 15h.01"/>
+                            </svg>
+                        </span>
+                        <span class="wallet-text">Connect Wallet</span>
+                    </button>
+                    <div class="wallet-dropdown" id="walletDropdown">
+                        <div class="dropdown-item" id="disconnectBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            <span>Disconnect</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Navigation Tabs -->
+    <div class="page-nav">
+        <div class="page-nav-container">
+            <a href="staking.html" class="page-nav-tab active">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.4 4.4l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.4-4.4l4.2-4.2"/>
+                </svg>
+                <span>Staking</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="hero-title">Stake $BRB, Earn Rewards</h1>
+            <p class="hero-subtitle">Earn up to 30% APR with NFT tier bonuses</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper">
+                    <svg class="stat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Your Staked</div>
+                    <div class="stat-value-group">
+                        <div class="stat-value" id="userStaked">0.00</div>
+                        <div class="stat-unit">$BRB</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper">
+                    <svg class="stat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                        <polyline points="17 6 23 6 23 12"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Pending Rewards</div>
+                    <div class="stat-value-group">
+                        <div class="stat-value" id="pendingRewards">0.00</div>
+                        <div class="stat-unit">$BRB</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper">
+                    <svg class="stat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Your APR</div>
+                    <div class="stat-value-group">
+                        <div class="stat-value" id="userAPR">20</div>
+                        <div class="stat-unit">%</div>
+                    </div>
+                    <div class="stat-tier-bonus" id="aprBonus">Base Rate</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper">
+                    <svg class="stat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Your Tier</div>
+                    <div class="stat-value" id="userTier">No NFT</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper">
+                    <svg class="stat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Total Stakers</div>
+                    <div class="stat-value" id="totalStakers">0</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper">
+                    <svg class="stat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                        <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Total Staked</div>
+                    <div class="stat-value-group">
+                        <div class="stat-value" id="totalStaked">0.00</div>
+                        <div class="stat-unit">$BRB</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Cards Grid -->
+        <div class="cards-grid">
+            <!-- Stake Card -->
+            <div class="action-card">
+                <div class="card-header">
+                    <h2 class="card-title">Stake $BRB</h2>
+                    <div class="balance-display">
+                        Balance: <span id="picaBalance">0.00</span> $BRB
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <label class="input-label">Amount to Stake</label>
+                    <div class="input-wrapper">
+                        <input
+                            type="number"
+                            class="token-input"
+                            id="stakeInput"
+                            placeholder="0.0"
+                            step="0.01"
+                            min="0"
+                        >
+                        <button class="max-btn" id="maxStakeBtn">MAX</button>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">You will earn</span>
+                        <span class="info-value" id="stakeAPR">20% APR</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Estimated daily</span>
+                        <span class="info-value" id="dailyEarnings">0.00 $BRB</span>
+                    </div>
+                </div>
+
+                <button class="action-btn stake-btn" id="stakeBtn" disabled>
+                    <span class="btn-text">Enter Amount</span>
+                </button>
+
+                <div class="card-notice">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                    <span>Rewards accrue every second based on your APR</span>
+                </div>
+            </div>
+
+            <!-- Rewards Card -->
+            <div class="action-card">
+                <div class="card-header">
+                    <h2 class="card-title">Your Rewards</h2>
+                    <div class="nft-tier-display" id="nftTierDisplay">
+                        <img src="info/bronze.svg" alt="NFT Tier" class="tier-icon" id="tierIcon" style="display: none;">
+                        <span id="tierText">No NFT</span>
+                    </div>
+                </div>
+
+                <div class="rewards-display">
+                    <div class="rewards-label">Available to Claim</div>
+                    <div class="rewards-value">
+                        <span id="claimableRewards">0.00</span>
+                        <span class="rewards-unit">$BRB</span>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Your APR</span>
+                        <span class="info-value apr-highlight" id="rewardsAPR">20%</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">NFT Boost</span>
+                        <span class="info-value" id="nftBoost">+0%</span>
+                    </div>
+                </div>
+
+                <button class="action-btn claim-btn" id="claimBtn" disabled>
+                    <span class="btn-text">Claim Rewards</span>
+                </button>
+
+                <div class="card-notice success">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>Claim anytime without unstaking</span>
+                </div>
+            </div>
+
+            <!-- Unstake Card -->
+            <div class="action-card">
+                <div class="card-header">
+                    <h2 class="card-title">Unstake $BRB</h2>
+                    <div class="balance-display">
+                        Staked: <span id="stakedAmount">0.00</span> $BRB
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <label class="input-label">Amount to Unstake</label>
+                    <div class="input-wrapper">
+                        <input
+                            type="number"
+                            class="token-input"
+                            id="unstakeInput"
+                            placeholder="0.0"
+                            step="0.01"
+                            min="0"
+                        >
+                        <button class="max-btn" id="maxUnstakeBtn">MAX</button>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">You will receive</span>
+                        <span class="info-value" id="unstakeAmount">0.00 $BRB</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">+ Pending rewards</span>
+                        <span class="info-value" id="unstakeRewards">0.00 $BRB</span>
+                    </div>
+                </div>
+
+                <button class="action-btn unstake-btn" id="unstakeBtn" disabled>
+                    <span class="btn-text">Unstake All + Claim</span>
+                </button>
+
+                <div class="card-notice warning">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <span>Unstaking withdraws all stake + rewards</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- NFT Tier Benefits -->
+        <div class="tier-benefits-section">
+            <h3 class="section-title">NFT Tier Benefits</h3>
+            <div class="tier-benefits-grid">
+                <div class="tier-benefit-card bronze">
+                    <div class="tier-benefit-icon">
+                        <img src="info/bronze.svg" alt="Bronze" class="tier-benefit-image">
+                    </div>
+                    <h4 class="tier-benefit-title">Bronze Tier</h4>
+                    <div class="tier-benefit-apr">22% APR</div>
+                    <div class="tier-benefit-bonus">+2% Bonus</div>
+                    <div class="tier-benefit-requirement">Fund $5+ USD</div>
+                </div>
+
+                <div class="tier-benefit-card silver">
+                    <div class="tier-benefit-icon">
+                        <img src="info/silver.svg" alt="Silver" class="tier-benefit-image">
+                    </div>
+                    <h4 class="tier-benefit-title">Silver Tier</h4>
+                    <div class="tier-benefit-apr">25% APR</div>
+                    <div class="tier-benefit-bonus">+5% Bonus</div>
+                    <div class="tier-benefit-requirement">Fund $50+ USD</div>
+                </div>
+
+                <div class="tier-benefit-card gold">
+                    <div class="tier-benefit-icon">
+                        <img src="info/gold.svg" alt="Gold" class="tier-benefit-image">
+                    </div>
+                    <h4 class="tier-benefit-title">Gold Tier</h4>
+                    <div class="tier-benefit-apr">30% APR</div>
+                    <div class="tier-benefit-bonus">+10% Bonus</div>
+                    <div class="tier-benefit-requirement">Fund $100+ USD</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="how-it-works">
+            <h3 class="section-title">How Staking Works</h3>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title">Stake $BRB</h4>
+                    <p class="step-description">Deposit your $BRB tokens to start earning rewards</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title">Earn Rewards</h4>
+                    <p class="step-description">Earn 20% base APR + NFT tier bonuses</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title">Claim Anytime</h4>
+                    <p class="step-description">Claim rewards without unstaking your position</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title">Unstake</h4>
+                    <p class="step-description">Withdraw your stake + all rewards anytime</p>
+                </div>
+            </div>
+        </div>
+
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Processing transaction...</p>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-message" id="toastMessage"></span>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="staking.js"></script>
+</body>
+</html>

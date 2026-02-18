@@ -1,0 +1,28 @@
+{
+  "name": "brabo-staking-frontend",
+  "version": "1.0.0",
+  "description": "Professional staking interface for BraboStaking.sol with NFT tier integration",
+  "scripts": {
+    "dev": "python3 -m http.server 8000",
+    "dev:node": "npx http-server -p 8000 -o",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod"
+  },
+  "keywords": [
+    "staking",
+    "defi",
+    "web3",
+    "ethereum",
+    "base",
+    "nft",
+    "rewards"
+  ],
+  "author": "Brabo Markets",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

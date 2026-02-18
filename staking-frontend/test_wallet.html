@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        button {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #2563EB;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        .error {
+            color: #ff4444;
+        }
+        .success {
+            color: #44ff44;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wallet Connection Test</h1>
+
+    <button id="testBtn">Test Wallet Connection</button>
+    <button id="detectBtn">Detect Wallets</button>
+
+    <div id="status">
+        <p>Status: Ready to test</p>
+    </div>
+
+    <script type="module">
+        import { walletConnector } from './wallet_connect.js';
+
+        const testBtn = document.getElementById('testBtn');
+        const detectBtn = document.getElementById('detectBtn');
+        const status = document.getElementById('status');
+
+        function log(message, type = 'info') {
+            console.log(message);
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            status.innerHTML = `<p class="${className}">${message}</p>`;
+        }
+
+        // Test wallet detection
+        detectBtn.addEventListener('click', () => {
+            try {
+                const wallets = walletConnector.detectWallets();
+                log(`Found ${wallets.length} wallet(s):<br>${wallets.map(w => `- ${w.name} (${w.type})`).join('<br>')}`, 'success');
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        });
+
+        // Test wallet connection
+        testBtn.addEventListener('click', async () => {
+            try {
+                log('Connecting wallet...');
+                const connection = await walletConnector.connect(8453);
+                log(`✅ Connected!<br>Address: ${connection.address}<br>Wallet: ${connection.walletType}`, 'success');
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        });
+
+        log('Test page loaded successfully!');
+    </script>
+</body>
+</html>
