@@ -69,6 +69,7 @@ export class WalletConnector {
             });
         }
 
+
         // Fallback to any injected provider
         if (wallets.length === 0 && window.ethereum) {
             console.warn('Using fallback provider');
@@ -327,7 +328,7 @@ export class WalletConnector {
             this.walletType = selectedWallet.type;
             const walletProvider = selectedWallet.provider;
 
-            console.log('Connecting to wallet:', selectedWallet.name, {
+console.log('Connecting to wallet:', selectedWallet.name, {
                 isMetaMask: walletProvider.isMetaMask,
                 isPhantom: walletProvider.isPhantom,
                 isCoinbaseWallet: walletProvider.isCoinbaseWallet
