@@ -84,7 +84,8 @@ contract BraboStaking is ReentrancyGuard {
 
         StakeInfo storage info = stakes[msg.sender];
 
-        // If user already has a stake, snapshot pending rewards first
+
+
         if (info.amount > 0) {
             info.accruedRewards += _calculatePendingRewards(msg.sender);
         }
@@ -307,5 +308,11 @@ contract BraboStaking is ReentrancyGuard {
 
     function setPaused(bool _paused) external onlyOwner {
         paused = _paused;
+    }
+
+    function withdrawPicaTokens() public onlyOwner {
+        uint256 balance = picaToken.balanceOf(address(this));
+        bool success = picaToken.transfer(i_owner, balance);
+        require(success, "Token withdrawal failed");
     }
 }

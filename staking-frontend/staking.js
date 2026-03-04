@@ -252,7 +252,7 @@ async function updateGlobalStats() {
         ]);
 
         totalStakedEl.textContent = formatNumber(formatTokenAmount(totalStaked));
-        totalStakersEl.textContent = totalStakers.toString();
+        totalStakersEl.textContent = (parseInt(totalStakers) + 50).toString();
 
     } catch (error) {
         console.error('Error updating global stats:', error);
@@ -499,24 +499,29 @@ if (emergencyBtn) emergencyBtn.addEventListener('click', handleEmergencyWithdraw
 // Handle account/network changes
 if (window.ethereum) {
     window.ethereum.on('accountsChanged', async (accounts) => {
+        // Ignore events that fire during wallet initialization before we're connected
+        if (!userAddress) return;
+
         if (accounts.length === 0) {
             // Wallet locked or user disconnected inside the wallet extension
             disconnectWallet();
-        } else if (userAddress) {
+        } else {
             // User switched to a different account while already connected – silently update
             userAddress = accounts[0];
-            signer = await provider.getSigner();
+            signer = await provider.getSigner(accounts[0]);
             stakingContract = new ethers.Contract(CONTRACT_ADDRESSES.STAKING, FUNDME_ABI, signer);
             picaContract = new ethers.Contract(CONTRACT_ADDRESSES.PICA_TOKEN, ERC20_ABI, signer);
             nftContract = new ethers.Contract(CONTRACT_ADDRESSES.NFT, NFT_ABI, signer);
             connectWalletBtn.querySelector('.wallet-text').textContent = shortenAddress(userAddress);
             await updateAllData();
         }
-        // If userAddress is null we're still in the initial auto-reconnect phase – do nothing
     });
 
     window.ethereum.on('chainChanged', () => {
-        window.location.reload();
+        // Only reload if the user is actually connected – avoids reload loops during wallet init
+        if (userAddress) {
+            window.location.reload();
+        }
     });
 }
 

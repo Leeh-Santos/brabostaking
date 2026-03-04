@@ -449,13 +449,19 @@ console.log('Connecting to wallet:', selectedWallet.name, {
         const savedWalletType = localStorage.getItem('brabo_wallet_type');
         if (!savedWalletType) return null;
 
-        if (!window.ethereum) return null;
+        // Resolve the exact provider for the saved wallet type first.
+        // Using window.ethereum unconditionally is wrong when the user connected
+        // with Phantom (window.phantom.ethereum) and another wallet occupies window.ethereum.
+        const wallets = this.detectWallets();
+        const savedWallet = wallets.find(w => w.type === savedWalletType);
+        const walletProvider = savedWallet?.provider ?? window.ethereum;
+
+        if (!walletProvider) return null;
 
         // eth_accounts does NOT trigger a popup – returns accounts only if already authorized
-        // Call it on window.ethereum directly; it's reliable even before detectWallets() runs
         let accounts;
         try {
-            accounts = await window.ethereum.request({ method: 'eth_accounts' });
+            accounts = await walletProvider.request({ method: 'eth_accounts' });
         } catch {
             return null;
         }
@@ -465,28 +471,20 @@ console.log('Connecting to wallet:', selectedWallet.name, {
             return null;
         }
 
-        // Try to find the exact provider used last time; fall back to window.ethereum
-        const wallets = this.detectWallets();
-        const savedWallet = wallets.find(w => w.type === savedWalletType);
-        const walletProvider = savedWallet ? savedWallet.provider : window.ethereum;
-
-        // Ensure we're on the right network
+        // Verify we're on the right network – do NOT switch silently as that triggers a popup
         try {
             const currentChainId = await walletProvider.request({ method: 'eth_chainId' });
             if (parseInt(currentChainId, 16) !== chainId) {
-                await walletProvider.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: `0x${chainId.toString(16)}` }],
-                });
+                // Wrong network – let the user connect manually so they can approve the switch
+                return null;
             }
         } catch {
-            // Can't switch silently – user will connect manually
             return null;
         }
 
         this.walletType = savedWalletType;
         this.provider = new ethers.BrowserProvider(walletProvider);
-        this.signer = await this.provider.getSigner();
+        this.signer = await this.provider.getSigner(accounts[0]);
         this.userAddress = accounts[0];
 
         return {
