@@ -55,7 +55,14 @@ export class WalletConnector {
                 provider: metaMaskProvider
             });
         } else {
-            console.warn('MetaMask provider not found');
+            console.warn('MetaMask provider not found - adding install option');
+            wallets.push({
+                name: 'MetaMask',
+                type: 'metamask',
+                icon: this.getMetaMaskIcon(),
+                provider: null,
+                notInstalled: true
+            });
         }
 
         // Phantom Wallet detection
@@ -119,8 +126,8 @@ export class WalletConnector {
                 return;
             }
 
-            // If only one wallet, connect directly
-            if (wallets.length === 1) {
+            // If only one wallet and it's installed, connect directly
+            if (wallets.length === 1 && !wallets[0].notInstalled) {
                 resolve({ wallet: wallets[0], closeModal: () => {} });
                 return;
             }
@@ -251,6 +258,11 @@ export class WalletConnector {
             };
 
             walletBtn.onclick = () => {
+                if (wallet.notInstalled) {
+                    window.open('https://metamask.io/download/', '_blank');
+                    return;
+                }
+
                 // Show loading state
                 walletBtn.style.opacity = '0.5';
                 walletBtn.style.pointerEvents = 'none';
@@ -281,8 +293,12 @@ export class WalletConnector {
             `;
 
             const name = document.createElement('span');
-            name.textContent = wallet.name;
             name.style.flex = '1';
+            if (wallet.notInstalled) {
+                name.innerHTML = `${wallet.name} <span style="font-size:11px;font-weight:400;color:#f59e0b;background:rgba(245,158,11,0.15);padding:2px 7px;border-radius:6px;margin-left:8px;">Install</span>`;
+            } else {
+                name.textContent = wallet.name;
+            }
 
             walletBtn.appendChild(icon);
             walletBtn.appendChild(name);

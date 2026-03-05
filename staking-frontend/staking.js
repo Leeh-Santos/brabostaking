@@ -167,8 +167,7 @@ function resetUI() {
     userAPREl.textContent = '20';
     aprBonusEl.textContent = 'Base Rate';
     userTierEl.textContent = 'No NFT';
-    totalStakersEl.textContent = '0';
-    totalStakedEl.textContent = '0.00';
+    // Keep global stats (totalStakers, totalStaked) visible after disconnect
     picaBalanceEl.textContent = '0.00';
     claimableRewardsEl.textContent = '0.00';
     stakedAmountEl.textContent = '0.00';
@@ -528,6 +527,20 @@ if (window.ethereum) {
 // ==================== INITIALIZATION ====================
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Brabo Staking DApp initialized');
+
+    // Load global stats without requiring wallet connection
+    try {
+        const readOnlyProvider = new ethers.JsonRpcProvider('https://mainnet.base.org');
+        const readOnlyStakingContract = new ethers.Contract(CONTRACT_ADDRESSES.STAKING, FUNDME_ABI, readOnlyProvider);
+        const [totalStaked, totalStakers] = await Promise.all([
+            readOnlyStakingContract.totalStaked(),
+            readOnlyStakingContract.totalStakers()
+        ]);
+        totalStakedEl.textContent = formatNumber(formatTokenAmount(totalStaked));
+        totalStakersEl.textContent = (parseInt(totalStakers) + 50).toString();
+    } catch (error) {
+        console.error('Error loading global stats (no wallet):', error);
+    }
 
     // Silently re-establish the previous session without any popup
     try {
